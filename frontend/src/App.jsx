@@ -2,11 +2,18 @@ import React from "react";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
+import { Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <div className="p-4 h-screen flex items-center justify-center">
-      <HomePage />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+      </Routes>
+      <Toaster />
     </div>
   );
 };

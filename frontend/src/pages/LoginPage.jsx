@@ -33,12 +33,12 @@ const LoginPage = () => {
               className="w-full input input-bordered h-10"
             />
           </div>
-          <a
+          <Link
             to="/signup"
             className="text-lg  hover:underline text-blue-600 hover:text-blue-800 mt-2 inline-block"
           >
             {"Don't"} have an account?
-          </a>
+          </Link>
           <div>
             <button className="btn btn-block btn-sm mt-2">Submit</button>
           </div>
