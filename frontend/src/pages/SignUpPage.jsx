@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import GenderCheckbox from "../components/genderSelection";
 import { useState } from "react";
 import React from "react";
+import useSignup from "../hooks/useSignup";
 
 const SignUp = () => {
   const [inputs, setInputs] = useState({
@@ -11,17 +12,11 @@ const SignUp = () => {
     confirmPassword: "",
     gender: "",
   });
+  const { loading, signup } = useSignup();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (inputs.password !== inputs.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-    if (!inputs.gender) {
-      alert("Please select a gender.");
-      return;
-    }
+    await signup(inputs);
 
     console.log("Form submitted:", inputs);
   };
@@ -116,10 +111,14 @@ const SignUp = () => {
 
           <div>
             <button
-              type="submit"
               className="btn btn-block btn-sm mt-2 border border-slate-700"
+              disabled={loading}
             >
-              Sign Up
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </div>
         </form>

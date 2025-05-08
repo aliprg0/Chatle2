@@ -1,25 +1,19 @@
-// src/components/sidebar/LogoutButton.jsx
-import React from "react";
 import { BiLogOut } from "react-icons/bi";
+import useLogout from "../../hooks/useLogout";
 
 const LogoutButton = () => {
-  const handleLogout = () => {
-    // Handle logout logic
-    console.log("Logout clicked");
-  };
+  const { loading, logout } = useLogout();
 
   return (
-    <div className="mt-auto p-2 border-t border-gray-700">
-      {" "}
-      {/* Added padding and border */}
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-2 p-2 text-gray-300 hover:text-white hover:bg-red-500/80 rounded-md w-full transition-colors duration-150"
-        aria-label="Logout"
-      >
-        <BiLogOut className="w-6 h-6" />
-        <span className="font-medium">Logout</span>
-      </button>
+    <div className="mt-auto">
+      {!loading ? (
+        <BiLogOut
+          className="w-6 h-6 text-white cursor-pointer"
+          onClick={logout}
+        />
+      ) : (
+        <span className="loading loading-spinner"></span>
+      )}
     </div>
   );
 };
