@@ -25,17 +25,3 @@ body {
     box-shadow: 0 0 0 2px #1a1a1a;
 }
 
-.avatar.offline:before {
-    content: '';
-    position: absolute;
-    z-index: 10;
-    display: block;
-    border-radius: 9999px;
-    --tw-bg-opacity: 1;
-    background-color: rgb(239 68 68 / var(--tw-bg-opacity));
-    width: 15%;
-    height: 15%;
-    top: 7%;
-    right: 7%;
-    box-shadow: 0 0 0 2px #1a1a1a;
-}
