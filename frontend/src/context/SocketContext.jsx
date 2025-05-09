@@ -15,17 +15,21 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const socket = io("http://localhost:5000", {
+      const SOCKET_URL = import.meta.env.PROD
+        ? "https://chatle2.vercel.app"
+        : "http://localhost:5000";
+
+      const socket = io(SOCKET_URL, {
         query: {
           userId: authUser._id,
         },
         withCredentials: true,
+        path: "/socket.io",
       });
 
       setSocket(socket);
 
       socket.on("getOnlineUsers", (users) => {
-        console.log("Online users from socket:", users);
         setOnlineUsers(users);
       });
 

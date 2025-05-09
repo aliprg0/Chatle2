@@ -6,10 +6,14 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:5000"],
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://chatle2.vercel.app"
+        : ["http://localhost:3000", "http://localhost:5000"],
     methods: ["GET", "POST"],
     credentials: true,
   },
+  path: "/socket.io",
 });
 
 const userSocketMap = {};
@@ -22,7 +26,6 @@ io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
 
   const userId = socket.handshake.query.userId;
-  console.log("Socket connected with userId:", userId);
   if (userId && userId !== "undefined") {
     userSocketMap[userId] = socket.id;
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
