@@ -1,5 +1,6 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -27,11 +28,18 @@ export const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage._id);
     }
 
-    // PROMISE.ALL TO SAVE BOTH
     await Promise.all([conversation.save(), newMessage.save()]);
 
-    // Send the complete new message back to the client
-    return res.status(201).json(newMessage);
+    const populatedMessage = await Message.findById(newMessage._id)
+      .populate("senderId", "fullName profilePic")
+      .populate("receiverId", "fullName profilePic");
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", populatedMessage);
+    }
+
+    return res.status(201).json(populatedMessage);
   } catch (error) {
     console.error("Error in sendMessage controller:", error.message);
     return res.status(500).json({ error: "Internal server error" });
@@ -45,11 +53,15 @@ export const getMessages = async (req, res) => {
 
     const conversation = await Conversation.findOne({
       participants: { $all: [userId, userToChatId] },
-    }).populate("messages");
+    }).populate({
+      path: "messages",
+      populate: [
+        { path: "senderId", select: "fullName profilePic" },
+        { path: "receiverId", select: "fullName profilePic" },
+      ],
+    });
 
-    if (!conversation) {
-      return res.status(200).json([]);
-    }
+    if (!conversation) return res.status(200).json([]);
 
     const messages = conversation.messages;
     res.status(200).json(messages);

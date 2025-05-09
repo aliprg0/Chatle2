@@ -1,27 +1,18 @@
 import { useAuthContext } from "../../context/AuthContext";
 import { extractTime } from "../../utils/extractTime";
-import useConversation from "../../store/useConversation";
 
 const Message = ({ message }) => {
   const { authUser } = useAuthContext();
-  const { selectedConversation } = useConversation();
 
-  if (!message || !selectedConversation) return null;
+  if (!message) return null;
 
-  const fromMe = message.senderId === authUser._id;
-  const formattedTime = extractTime(message.createdAt);
+  const fromMe = message.senderId._id === authUser._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-
-  // Use default profile pic if none is provided
-  const defaultProfilePic = `https://avatar.iran.liara.run/public/${
-    fromMe ? "boy" : "girl"
-  }?username=${fromMe ? authUser.username : selectedConversation.username}`;
-
   const profilePic = fromMe
-    ? authUser.profilePic || defaultProfilePic
-    : selectedConversation.profilePic || defaultProfilePic;
-
+    ? message.senderId.profilePic
+    : message.receiverId.profilePic;
   const bubbleBgColor = fromMe ? "bg-blue-500" : "";
+  const formattedTime = extractTime(message.createdAt);
   const shakeClass = message.shouldShake ? "shake" : "";
 
   return (
