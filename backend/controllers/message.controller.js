@@ -17,17 +17,24 @@ export const sendMessage = async (req, res) => {
       });
     }
 
-    const newMessage = await Message.create({
+    const newMessage = new Message({
       senderId,
       receiverId,
       text: message,
     });
 
-    conversation.messages.push(newMessage._id);
+    if (newMessage) {
+      conversation.messages.push(newMessage._id);
+    }
+
+    // PROMISE.ALL TO SAVE BOTH
     await Promise.all([conversation.save(), newMessage.save()]);
+
+    // Send the complete new message back to the client
+    return res.status(201).json(newMessage);
   } catch (error) {
     console.error("Error in sendMessage controller:", error.message);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
