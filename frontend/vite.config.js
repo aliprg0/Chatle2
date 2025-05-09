@@ -9,8 +9,12 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api": {
-        target: "https://chatle2.vercel.app",
+        target: "http://localhost:5000",
       },
     },
+  },
+  build: {
+    outDir: "dist",
+    assetsDir: "assets",
   },
 });
