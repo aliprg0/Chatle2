@@ -8,6 +8,14 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
   const isSelected = selectedConversation?._id === conversation._id;
   const isOnline = onlineUsers?.includes(conversation._id);
 
+  // Debug log
+  console.log("Checking online status for:", {
+    userName: conversation.fullName,
+    userId: conversation._id,
+    onlineUsers,
+    isOnline,
+  });
+
   return (
     <>
       <div
@@ -16,9 +24,11 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 			`}
         onClick={() => setSelectedConversation(conversation)}
       >
-        <div className={`avatar ${isOnline ? "online" : "offline"}`}>
-          <div className="w-12 rounded-full">
-            <img src={conversation.profilePic} alt="user avatar" />
+        <div className="relative">
+          <div className={`avatar ${isOnline ? "online" : "offline"}`}>
+            <div className="w-12 rounded-full">
+              <img src={conversation.profilePic} alt="user avatar" />
+            </div>
           </div>
         </div>
 
